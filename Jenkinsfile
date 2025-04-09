@@ -41,32 +41,34 @@ pipeline{
 			}
 		}
 
-		stage('Package'){
+		stage ('Package') {
 			steps {
 				sh "mvn package -DskipTests"
 			}
 		}
-			stage ('Build Docker Image') {
-		steps {
-			// "docker build -t /codecrunchweb/currency-exchange-devops/:$env.BUILD_TAG"
-			script {
-				dockerImage = docker.build("/codecrunchweb/currency-exchange-devops/:${env.BUILD_TAG}")
-			}
+
+		stage ('Build Docker image') {
+			steps {
+				// "docker build -t /codecrunchweb/currency-exchange-devops/:$env.BUILD_TAG"
+				script {
+					dockerImage = docker.build("/codecrunchweb/currency-exchange-devops/:${env.BUILD_TAG}")
+				}
+
 			}
 		}
-	stage ('Push Docker Image') {
-		steps {
-			script {
-				docker.withRegistery('', 'dockerhubid') {
+
+		stage ('Pudh Docker Image') {
+			steps {
+				script {
+				    docker.withRegistery('', 'dockerhubid') {
 					dockerImage.push();
 				    dockerImage.push('latest');
 				}
-				
 			}
-		}
-	}
+		}	
 	} 
-	post{
+
+	post {
 		always {
 			echo 'Im awesome. I run always'
 		}
@@ -77,23 +79,4 @@ pipeline{
 			echo 'i run when you fail'
 		}
 	}
-	// stage ('Build Docker Image') {
-	// 	steps {
-	// 		// "docker build -t /codecrunchweb/currency-exchange-devops/:$env.BUILD_TAG"
-	// 		script {
-	// 			dockerImage = docker.build("/codecrunchweb/currency-exchange-devops/:${env.BUILD_TAG}")
-	// 		}
-	// 		}
-	// 	}
-	// stage ('Push Docker Image') {
-	// 	steps {
-	// 		script {
-	// 			docker.withRegistery('', 'dockerhubid') {
-	// 				dockerImage.push();
-	// 			    dockerImage.push('latest');
-	// 			}
-				
-	// 		}
-	// 	}
-	// }
 }
