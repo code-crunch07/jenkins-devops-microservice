@@ -32,12 +32,18 @@ pipeline{
 		}
 		stage('Test'){
 			steps {
-				echo "mvn test"
+				sh "mvn test"
 			}
 		}
 		stage('Integration Test'){
 			steps {
-				echo "mvn failsafe:integration-test failsafe:verify"
+				sh "mvn failsafe:integration-test failsafe:verify"
+			}
+		}
+
+		stage('Package'){
+			steps {
+				sh "mvn package -DskipTests"
 			}
 		}
 	} 
@@ -50,6 +56,25 @@ pipeline{
 		}
 		failure {
 			echo 'i run when you fail'
+		}
+	}
+	stage ('Build Docker Image') {
+		steps {
+			// "docker build -t /codecrunchweb/currency-exchange-devops/:$env.BUILD_TAG"
+			script {
+				dockerImage = docker.build("/codecrunchweb/currency-exchange-devops/:${env.BUILD_TAG}")
+			}
+			}
+		}
+	stage ('Push Docker Image') {
+		steps {
+			script {
+				docker.withRegistery('', 'dockerhubid') {
+					dockerImage.push();
+				    dockerImage.push('latest');
+				}
+				
+			}
 		}
 	}
 }
