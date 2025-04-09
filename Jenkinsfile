@@ -46,19 +46,7 @@ pipeline{
 				sh "mvn package -DskipTests"
 			}
 		}
-	} 
-	post{
-		always {
-			echo 'Im awesome. I run always'
-		}
-		success {
-			echo 'im run whenyou are successfull'
-		}
-		failure {
-			echo 'i run when you fail'
-		}
-	}
-	stage ('Build Docker Image') {
+			stage ('Build Docker Image') {
 		steps {
 			// "docker build -t /codecrunchweb/currency-exchange-devops/:$env.BUILD_TAG"
 			script {
@@ -77,4 +65,35 @@ pipeline{
 			}
 		}
 	}
+	} 
+	post{
+		always {
+			echo 'Im awesome. I run always'
+		}
+		success {
+			echo 'im run whenyou are successfull'
+		}
+		failure {
+			echo 'i run when you fail'
+		}
+	}
+	// stage ('Build Docker Image') {
+	// 	steps {
+	// 		// "docker build -t /codecrunchweb/currency-exchange-devops/:$env.BUILD_TAG"
+	// 		script {
+	// 			dockerImage = docker.build("/codecrunchweb/currency-exchange-devops/:${env.BUILD_TAG}")
+	// 		}
+	// 		}
+	// 	}
+	// stage ('Push Docker Image') {
+	// 	steps {
+	// 		script {
+	// 			docker.withRegistery('', 'dockerhubid') {
+	// 				dockerImage.push();
+	// 			    dockerImage.push('latest');
+	// 			}
+				
+	// 		}
+	// 	}
+	// }
 }
