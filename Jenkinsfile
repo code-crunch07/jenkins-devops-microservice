@@ -1,7 +1,7 @@
 //scriped
 // DECLARATIVE
 
-pipeline{
+pipeline {
 	agent any
 	// agent { docker { image 'maven:3.9.9'} }
 	// agent { docker { image 'node:23.11.0'} }
@@ -25,16 +25,19 @@ pipeline{
 				echo "BUILD_URL - $env.BUILD_URL"
 			}
 		}
-		stage ('Build'){
+
+		stage ('Build') {
 			steps {
 				sh "mvn clean compile"
 			}
 		}
+
 		stage('Test'){
 			steps {
 				sh "mvn test"
 			}
 		}
+
 		stage('Integration Test'){
 			steps {
 				sh "mvn failsafe:integration-test failsafe:verify"
@@ -60,10 +63,12 @@ pipeline{
 		stage ('Pudh Docker Image') {
 			steps {
 				script {
-				    docker.withRegistery('', 'dockerhubid') {
-					dockerImage.push();
-				    dockerImage.push('latest');
+					docker.withRegistery('', 'dockerhubid') {
+						dockerImage.push();
+						dockerImage.push('latest');
+					}
 				}
+			
 			}
 		}	
 	} 
@@ -72,9 +77,11 @@ pipeline{
 		always {
 			echo 'Im awesome. I run always'
 		}
+		
 		success {
 			echo 'im run whenyou are successfull'
 		}
+
 		failure {
 			echo 'i run when you fail'
 		}
